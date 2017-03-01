@@ -17,7 +17,7 @@ app.get('/new/*', function (req, res) {
 		res.send("Error: invalid url");
 	}
 	urlList[+urls]=url;
-	var responseObj = {"Original url":url,"Short url":((process.env.HOST)+'/'+(urls))};
+	var responseObj = {"Original url":url,"Short url":((process.env.HOSTNAME)+'/'+(urls))};
 	urls++;
 	res.send(responseObj);
 });
