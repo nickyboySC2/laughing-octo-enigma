@@ -4,21 +4,30 @@ var app = express();
 
 app.use(express.static('client'));
 
-app.get('/*', function (req, res) {
-	var responseObj = {"ipaddress":null,"language":null,"software":null};
-	console.log(req.headers);
-	var ip = req.headers['x-forwarded-for'] || 
-    	req.connection.remoteAddress || 
-    	req.socket.remoteAddress ||
-    	req.connection.socket.remoteAddress||
-    "N/A";
-	var language = req.get('accept-language');
-	var software = req.get('user-agent');
-	responseObj["ipaddress"]=ip;
-	//epic hax
-	responseObj["language"]=language.split(',')[0];
-	responseObj["software"]=software.split('(')[1].split(')')[0];
-	res.send(JSON.stringify(responseObj));
+var validUrl = require('valid-url');
+
+var urls = 0;
+var urlList = [];
+
+app.get('/new/*', function (req, res) {
+	console.log(req.url);
+	var url=req.url.substring(req.url.indexOf("new")+4);
+	console.log(url);
+	if(!validUrl.isUri(url)){
+		res.send("Error: invalid url");
+	}
+	urlList[+urls]=url;
+	var responseObj = {"Original url":url,"Short url":((process.env.HOST)+'/'+(urls))};
+	urls++;
+	res.send(responseObj);
+});
+
+app.get('/*',function(req,res){
+	var url=req.url.substring(1);
+	if(!urlList[url]){
+		res.send("Error: url not found in 'database'");
+	}
+	res.send("<script>window.location.replace("+"\""+urlList[url]+"\""+")</script>");
 });
 
 app.listen(process.env.PORT||8888, function () {

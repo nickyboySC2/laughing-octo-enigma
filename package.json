@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/nickyboySC2/laughing-octo-enigma/issues"
   },
-  "homepage": "https://github.com/nickyboySC2/laughing-octo-enigma#readme"
+  "homepage": "https://github.com/nickyboySC2/laughing-octo-enigma#readme",
+  "dependencies": {
+    "express": "^4.14.1",
+    "valid-url": "^1.0.9"
+  }
 }
